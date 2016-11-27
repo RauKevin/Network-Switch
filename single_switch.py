@@ -51,7 +51,7 @@ class Single_Switch_Forwarding (object):
 		outport = int(self.hostlist[dest])
 		self.resend_packet(self, packet_in, outport)
     # Else, flood all ports with packet
-	else
+	else:
 		self.resend_packet(self, packet_in, of.OFPP_ALL)
 		
   def _handle_PacketIn (self, event):
