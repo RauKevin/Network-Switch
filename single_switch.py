@@ -7,7 +7,8 @@
 from pox.core import core
 import pox.openflow.libopenflow_01 as of
 log = core.getLogger()
-hostlist = []
+#hostlist = []
+hostlist = {}
 
 class Single_Switch_Forwarding (object):
 
@@ -18,12 +19,13 @@ class Single_Switch_Forwarding (object):
     connection.addListeners(self)
 	
 	#read in file with host addresses
-	with open("hostlist.csv", "rb") as fp:
+	with open("hostlist.csv", "r") as fp:
 		for i in fp.readlines():
 			tmp = i.split(",")
 			log.debug(tmp)
 			try:
-				hostlist.append(tmp[0], tmp[1], tmp[2])
+				#hostlist.append(EthAddr(tmp[0]), int(tmp[2]))	#ignores the DPID for now
+				hostlist[tmp[0]] = tmp[2]
 			except:pass
 
 
@@ -43,12 +45,14 @@ class Single_Switch_Forwarding (object):
     # Fill in method with your own code, feel free to create other methods however
 
     # Store destination IP portion of Packet
-
+	dest = str(packet.dst)
     # If packet has valid IP portion, use hostlist.csv to determine which port to forward packet out
-
+	if dest in self.hostlist:
+		outport = int(self.hostlist[dest])
+		self.resend_packet(self, packet_in, outport)
     # Else, flood all ports with packet
 	else
-		self.resend_packet(event, packet_in, of.OFPP_ALL)
+		self.resend_packet(self, packet_in, of.OFPP_ALL)
 		
   def _handle_PacketIn (self, event):
     # OpenFlow method that is called automatically by a switch when it encounters a packet it does not
