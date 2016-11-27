@@ -24,7 +24,7 @@ class Single_Switch_Forwarding (object):
         tmp = i.split(",")
         try:
 		#hostlist.append(EthAddr(tmp[0]), int(tmp[2]))	#ignores the DPID for now
-          hostlist[tmp[0]] = tmp[2][:-2]
+          hostlist[tmp[0]] = tmp[2][:-1]
 	  log.debug(tmp)
         except:pass
 
