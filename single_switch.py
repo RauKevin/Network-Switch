@@ -19,14 +19,14 @@ class Single_Switch_Forwarding (object):
     connection.addListeners(self)
 	
 	#read in file with host addresses
-	with open("hostlist.csv", "r") as fp:
-		for i in fp.readlines():
-			tmp = i.split(",")
-			log.debug(tmp)
-			try:
-				#hostlist.append(EthAddr(tmp[0]), int(tmp[2]))	#ignores the DPID for now
-				hostlist[tmp[0]] = tmp[2]
-			except:pass
+    with open("hostlist.csv", "r") as fp:
+      for i in fp.readlines():
+        tmp = i.split(",")
+        log.debug(tmp)
+        try:
+		#hostlist.append(EthAddr(tmp[0]), int(tmp[2]))	#ignores the DPID for now
+          hostlist[tmp[0]] = tmp[2]
+        except:pass
 
 
   def resend_packet (self, packet_in, out_port):
