@@ -22,10 +22,10 @@ class Single_Switch_Forwarding (object):
     with open("hostlist.csv", "r") as fp:
       for i in fp.readlines():
         tmp = i.split(",")
-        log.debug(tmp)
         try:
 		#hostlist.append(EthAddr(tmp[0]), int(tmp[2]))	#ignores the DPID for now
-          hostlist[tmp[0]] = tmp[2]
+          hostlist[tmp[0]] = tmp[2][:-2]
+	  log.debug(tmp)
         except:pass
 
 
@@ -42,10 +42,9 @@ class Single_Switch_Forwarding (object):
     self.connection.send(msg)
 
   def forward_packet (self, packet, packet_in):
-    # Fill in method with your own code, feel free to create other methods however
-
     # Store destination IP portion of Packet
 	dest = str(packet.dst)
+	log.debug(dest)
     # If packet has valid IP portion, use hostlist.csv to determine which port to forward packet out
 	if dest in self.hostlist:
 		outport = int(self.hostlist[dest])
