@@ -17,8 +17,8 @@ class Binary_Switch (object):
     self.connection = connection
     connection.addListeners(self)
 	
-	#my flow table MAC --> port
-	self.flow_table = {}
+    #my flow table MAC --> port
+    self.flow_table = {}
 
 
   def resend_packet (self, packet_in, out_port):
@@ -28,8 +28,8 @@ class Binary_Switch (object):
     # Add an action to send to the specified port
     action = of.ofp_action_output(port = out_port)
     msg.actions.append(action)
-	msg.buffer_id = packet_in.buffer_id
-	msg.in_port = packet_in.in_port
+    msg.buffer_id = packet_in.buffer_id
+    msg.in_port = packet_in.in_port
 	
     # Send message to switch
     self.connection.send(msg)
@@ -42,13 +42,13 @@ class Binary_Switch (object):
 	
 	#check the packet type
 	if packet.type == packet.IP_TYPE:
-		log.debug("\nPacket type: IPv4")
+		log.debug("Packet type: IPv4")
 		#Do more processing of the IPv4 packet
 		ipv4_packet = packet.find("ipv4")
 		log.debug("IP dest: %s, scr: %s", str(ipv4_packet.dstip),str(ipv4_packet.srcip))
 		
 	else if packet.type == packet.ARP_TYPE:	
-		log.debug("\nPacket Type: ARP")
+		log.debug("Packet Type: ARP")
 		
 	else
 		log.debug("Unsupported Protocol, packet dropped")
@@ -62,7 +62,7 @@ class Binary_Switch (object):
 	# if destination is unicast, check to see if entry is in flow table
 	if dst_mac in self.flow_table:
 		outport = self.flow_table[dst_mac]
-		log.debug("Destination(MAC): %s found in flow table", str(dst_mac))
+		log.debug("Destination(MAC): %s found in flow table\n", str(dst_mac))
 		#if scr and dst are the same
 		if outport == self.flow_table[packet.src]: 
 			#drop
@@ -73,7 +73,7 @@ class Binary_Switch (object):
 
 	else:
 	  # Flood the packet out everything but the input port
-		log.debug("No entry found in flood table: flooding packet...")
+		log.debug("No entry found in flood table: flooding packet...\n")
 		self.resend_packet(packet_in, of.OFPP_ALL)
 	
 	
@@ -88,9 +88,9 @@ class Binary_Switch (object):
       return
 
 	#add to flow table
-	self.flow_table[packet.src] = event.port
+    self.flow_table[packet.src] = event.port
 	
-	log.debug("\nIncoming packet at switch %s, at port %s", str(event.dpid), str(event.port))
+    log.debug("Incoming packet at switch %s, at port %s", str(event.dpid), str(event.port))
 	
     packet_in = event.ofp # The actual ofp_packet_in message.
 
